@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="test-security-csrf2" />
+        <module name="test-openimaj" />
+        <module name="test-web" />
+        <module name="test-hash" />
+        <module name="test-tika" />
+        <module name="test-springboot-kafka" />
+        <module name="test-socket-timeout" />
+        <module name="test-activiti" />
+        <module name="test-springboot-jpa-subselect" />
+        <module name="test-wavemaker-project" />
+        <module name="test-text2image" />
+        <module name="test-jasperreports" />
+        <module name="test-hibernate-data-version" />
+        <module name="web-filter-sanitizer" />
+        <module name="test-cloud-product-service" />
+        <module name="test-spring-security" />
+        <module name="test-javafx-first" />
+        <module name="test-spellcheck" />
+        <module name="test-owasp-waf" />
+        <module name="test-cloud-zuul" />
+        <module name="test-freemarker" />
+        <module name="test-nashorn-database" />
+        <module name="test-cloud-eureka" />
+        <module name="test-web-xframe-options" />
+        <module name="test-springboot-mvc" />
+        <module name="test-rest-template-spring3" />
+        <module name="test-spring-cloud" />
+        <module name="test-ws-swagger" />
+        <module name="test-jasperreports-wavemaker" />
+        <module name="test-opencv" />
+        <module name="test-orientdb" />
+        <module name="test-ws-dynamic-path" />
+        <module name="test-spring-jdbctemplate" />
+        <module name="test-cloud-admin" />
+        <module name="test-file-attributes" />
+        <module name="test-jdk8-problem" />
+        <module name="test-opencv2" />
+        <module name="test-geoip" />
+        <module name="test-security-csrf" />
+        <module name="test-cloud-customer-service" />
+        <module name="test-bigsql" />
+        <module name="hibernate3-validator-safehtml" />
+        <module name="test-security-csrf (1)" />
+        <module name="test-compress" />
+        <module name="test-owasp-esapi" />
+        <module name="test-obi-ws" />
+        <module name="test-springboot-https" />
+        <module name="test-elasticsearch" />
+        <module name="xss-filter-on-rest-api" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hibernate3-validator-safehtml" target="1.5" />
+      <module name="test-activiti" target="1.5" />
+      <module name="test-bigsql" target="1.5" />
+      <module name="test-cloud-admin" target="1.8" />
+      <module name="test-cloud-customer-service" target="1.8" />
+      <module name="test-cloud-eureka" target="1.8" />
+      <module name="test-cloud-product-service" target="1.8" />
+      <module name="test-cloud-zuul" target="1.8" />
+      <module name="test-compress" target="1.5" />
+      <module name="test-elasticsearch" target="1.5" />
+      <module name="test-file-attributes" target="1.5" />
+      <module name="test-freemarker" target="1.5" />
+      <module name="test-geoip" target="1.5" />
+      <module name="test-hash" target="1.5" />
+      <module name="test-hibernate-data-version" target="1.5" />
+      <module name="test-jasperreports" target="1.5" />
+      <module name="test-jasperreports-wavemaker" target="1.5" />
+      <module name="test-javafx-first" target="1.5" />
+      <module name="test-jdk8-problem" target="1.5" />
+      <module name="test-main" target="1.5" />
+      <module name="test-nashorn-database" target="1.5" />
+      <module name="test-obi-ws" target="1.5" />
+      <module name="test-opencv" target="1.5" />
+      <module name="test-opencv2" target="1.7" />
+      <module name="test-openimaj" target="1.7" />
+      <module name="test-orientdb" target="1.5" />
+      <module name="test-owasp-esapi" target="1.7" />
+      <module name="test-owasp-waf" target="1.5" />
+      <module name="test-parent" target="1.5" />
+      <module name="test-rest-template-spring3" target="1.5" />
+      <module name="test-security-csrf" target="1.6" />
+      <module name="test-security-csrf2" target="1.6" />
+      <module name="test-security-group" target="1.5" />
+      <module name="test-socket-timeout" target="1.5" />
+      <module name="test-spellcheck" target="1.5" />
+      <module name="test-spring-cloud" target="1.5" />
+      <module name="test-spring-jdbctemplate" target="1.5" />
+      <module name="test-spring-security" target="1.8" />
+      <module name="test-springboot-https" target="1.8" />
+      <module name="test-springboot-jpa-subselect" target="1.8" />
+      <module name="test-springboot-kafka" target="1.8" />
+      <module name="test-springboot-mvc" target="1.8" />
+      <module name="test-text2image" target="1.5" />
+      <module name="test-tika" target="1.5" />
+      <module name="test-wavemaker-project" target="1.5" />
+      <module name="test-web" target="1.5" />
+      <module name="test-web-xframe-options" target="1.5" />
+      <module name="test-ws-dynamic-path" target="1.6" />
+      <module name="test-ws-swagger" target="1.6" />
+      <module name="web-filter-sanitizer" target="1.5" />
+      <module name="xss-filter-on-rest-api" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="test-spring-security" options="-parameters" />
+      <module name="test-springboot-https" options="-parameters" />
+      <module name="test-springboot-jpa-subselect" options="-parameters" />
+      <module name="test-springboot-kafka" options="-parameters" />
+      <module name="test-springboot-mvc" options="-parameters" />
+      <module name="xss-filter-on-rest-api" options="-parameters" />
+    </option>
+  </component>
+</project>

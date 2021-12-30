@@ -1,0 +1,85 @@
+# Create an index
+curl -XPUT "http://localhost:9200/music/"
+# Insert a document
+# curl -XPUT "http://localhost:9200/music1/songs/1" -d '{ "name": "Deck the Halls", "year": 1885, "lyrics": "Fa la la la la" }'
+curl -XPUT "http://localhost:9200/music1/songs/1" -H "Content-Type:application/json" -d "{ \"name\": \"Deck the Halls\", \"year\": 1885, \"lyrics\": \"Fa la la la la\" }"
+# View a document
+curl -XGET "http://localhost:9200/music1/songs/1"
+curl -XGET "http://localhost:9200/music1/songs/_search"
+# Update a document
+curl -XPUT "http://localhost:9200/music1/songs/1" -H "Content-Type:application/json" -d "{ \"name\": \"Deck the Halls\", \"year\": 1886, \"lyrics\": \"Fa la la la la\" }"
+
+# Delete a document (but not yet)
+curl -XDELETE "http://localhost:9200/music1/songs/1"
+--------------------------
+caseyjones.json
+{
+  "artist": "Wallace Saunders",
+  "year": 1909,
+  "styles": ["traditional"],
+  "album": "Unknown",
+  "name": "Ballad of Casey Jones",
+  "lyrics": "Come all you rounders if you want to hear
+The story of a brave engineer
+Casey Jones was the rounder's name....
+Come all you rounders if you want to hear
+The story of a brave engineer
+Casey Jones was the rounder's name
+On the six-eight wheeler, boys, he won his fame
+The caller called Casey at half past four
+He kissed his wife at the station door
+He mounted to the cabin with the orders in his hand
+And he took his farewell trip to that promis'd land
+
+Chorus:
+Casey Jones--mounted to his cabin
+Casey Jones--with his orders in his hand
+Casey Jones--mounted to his cabin
+And he took his... land"
+}
+--------------------------
+# Insert a document from a file
+curl -XPUT "http://localhost:9200/music1/songs/2" -H "Content-Type:application/json" -d @caseyjones.json
+--------------------------
+
+walking.json
+{
+  "artist": "Clarence Ashley",
+  "year": 1920,
+  "name": "Walking Boss",
+  "styles": ["folk"],
+  "album": "Traditional",
+  "lyrics": "Walkin' boss
+Walkin' boss
+Walkin' boss
+I don't belong to you
+
+I belong
+I belong
+I belong
+To that steel driving crew
+
+Well you work one day
+Work one day
+Work one day
+Then go lay around the shanty two"
+}
+--------------------------
+curl -XPUT "http://localhost:9200/music1/songs/3" -H "Content-Type:application/json" -d @walking.json
+# Search the REST API
+curl -XGET "http://localhost:9200/music1/songs/_search?q=lyrics:'you'"
+curl -XGET "http://localhost:9200/music1/songs/_search" -H "Content-Type:application/json" -d "{\"query\" : {\"term\" : { \"year\" :1920 }}}"
+# Use other comparators
+curl -XGET "http://localhost:9200/music1/songs/_search?q=year:<1900
+curl -XGET "http://localhost:9200/music1/songs/_search" -H "Content-Type:application/json" -d "{\"query\" : {\"term\" : { \"album\" :\"traditional\" }}}"
+# Restrict fields
+# curl -XGET "http://localhost:9200/music/lyrics/_search?q=year:>1900&fields=year"
+# curl -XGET "http://localhost:9200/music1/songs/_search" -H "Content-Type:application/json" -d "{\"fields\":[\"year\",\"album\"],  \"query\" : {\"term\" : { \"album\" :\"traditional\" }}}"
+# curl -XGET "http://localhost:9200/music1/songs/_search" -H "Content-Type:application/json" -d "{\"fields\":\"year\",  \"query\" : {\"term\" : { \"album\" :\"traditional\" }}}"
+
+
+-------------------------------------
+
+curl -XGET "http://localhost:9200/twitter/tweet/000000999"
+curl -XGET "http://localhost:9200/twitter/tweet/000002000"
+

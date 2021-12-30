@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>test-main</artifactId>
+        <groupId>bip.test</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>test-security-group</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <modules>
+        <module>test-security-csrf</module>
+        <module>test-security-csrf2</module>
+        <module>hibernate3-validator-safehtml</module>
+        <module>test-owasp-esapi</module>
+        <module>test-owasp-waf</module>
+        <module>test-spring-security</module>
+        <module>test-web-xframe-options</module>
+        <module>web-filter-sanitizer</module>
+        <module>xss-filter-on-rest-api</module>
+    </modules>
+
+
+</project>

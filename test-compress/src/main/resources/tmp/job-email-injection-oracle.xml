@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		">
+
+    <import resource="context.xml" />
+    <import resource="database-oracle.xml" />
+
+    <bean id="emailInjectionService" class="bip.sepehr.service.EmailInjectionServiceImpl">
+        <property name="jobLauncher" ref="jobLauncher"/>
+        <property name="jobEmailInjection" ref="job_email_injection"/>
+    </bean>
+
+    <!-- JOBS -->
+    <context:annotation-config/>
+
+    <batch:job id="job_email_injection" xmlns="http://www.springframework.org/schema/batch" job-repository="jobRepository" >
+        <step id="step_truncate_stage">
+            <tasklet ref="truncate_stage"/>
+            <next on="*" to="step_insert_injection"/>
+        </step>
+
+        <step id="step_insert_injection">
+            <tasklet ref="insert_injection"/>
+            <next on="*" to="step_transfer_emails2database"/>
+        </step>
+
+        <step id="step_transfer_emails2database">
+            <tasklet>
+                <chunk reader="multiResourceReader" processor="emailMessageFullProcessor" writer="emailMessageFullItemWriter"
+                       commit-interval="#{jobParameters['commit.interval']}" skip-limit="100"><!---->
+                    <skippable-exception-classes>
+                        <include class="java.sql.SQLException"/>
+                        <include class="org.springframework.dao.DataAccessException"/>
+                    </skippable-exception-classes>
+                    <listeners>
+                        <listener ref="objectWriteSkipListener"/>
+                    </listeners>
+                </chunk>
+            </tasklet>
+            <!--<tasklet ref="no_operation"/>-->
+            <next on="*" to="step_update_injection_nos"/>
+            <next on="FAILED" to="step_load_failed"/>
+        </step>
+
+        <step id="step_update_injection_nos">
+            <tasklet ref="update_injection_nos"/>
+            <next on="*" to="step_load_completed"/>
+        </step>
+
+        <step id="step_load_failed" >
+            <tasklet ref="delete_stage_jobrows"/>
+            <fail on="*" exit-code="FAILED"/>
+        </step>
+        <step id="step_load_completed">
+            <tasklet ref="no_operation"/>
+            <!--<next on="COMPLETED" to="step_fill_hscode"/>-->
+            <end on="COMPLETED"/>
+        </step>
+
+    </batch:job>
+
+    <!-- BEANS -->
+
+    <bean id="no_operation" class="bip.sepehr.tasklet.NoOpTasklet"/>
+
+    <bean id="truncate_stage" class="bip.sepehr.tasklet.ExecuteSqlTasklet" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql" value="truncate table stage_message" />
+    </bean>
+
+    <bean id="insert_injection" class="bip.sepehr.tasklet.ExecuteSqlReturnKeyTasklet" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+                insert into injection (injectionid,username,contactid,injectiondate,geo,sourcepath,movepath,dodelete,overwrite,job_execution_id)values(
+            seq_injection.nextval
+            ,'#{jobParameters['username']}'
+            ,#{jobParameters['contactid']}
+            ,to_date('#{jobParameters['date']}','YYYY-MM-DD')
+            ,'#{jobParameters['geo']}'
+            ,'#{jobParameters['sourcepath']}'
+            ,'#{jobParameters['movepath']}'
+            ,'#{jobParameters['dodelete']}'
+            ,'#{jobParameters['overwrite']}'
+            ,#{stepExecution.jobExecution.id}
+            )
+                ]]></value>
+        </property>
+        <property name="executionContextKeyName" value="injectionid"/>
+    </bean>
+
+    <!--
+            <bean id="insert_mimemessage" class="bip.sepehr.writer.MimeMessageItemWriter">
+                <property name="stageMessageItemWriter" ref="insert_stagemessage"/>
+                <property name="stageMessageItemProcessor">
+                    <bean class="bip.sepehr.processor.StageMessageProcessor"/>
+                </property>
+            </bean>
+        -->
+
+    <bean id="beanPropertyItemSqlParameterSourceProvider" class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+
+    <bean id="delete_stage_jobrows" class="bip.sepehr.tasklet.ExecuteSqlTasklet" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql" value="delete from stage_message" />
+    </bean>
+
+
+    <!--<bean class="org.springframework.batch.core.scope.StepScope" />-->
+    <bean id="injectionHolder" class="bip.sepehr.reader.InjectionHolderImpl" scope="step">
+        <property name="injectionid" value="#{jobExecutionContext['injectionid']}"/>
+        <property name="contactid" value="#{jobParameters['contactid']}"/>
+        <property name="date" value="#{jobParameters['date']}"/>
+        <property name="sourcepath" value="#{jobParameters['sourcepath']}"/>
+        <property name="movepath" value="#{jobParameters['movepath']}"/>
+        <property name="dodelete" value="#{jobParameters['dodelete']==1}"/>
+        <property name="geo" value="#{jobParameters['geo']}"/>
+        <property name="username" value="#{jobParameters['username']}"/>
+    </bean>
+
+    <bean id="update_injection_nos" class="bip.sepehr.tasklet.ExecuteSqlTasklet" scope="step">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql"><value><![CDATA[
+           update injection set
+               no_contacts_all =:noContactsAll
+              ,no_contacts_insert =:noContactsInsert
+              ,no_contacts_exists =:noContactsExists
+              ,no_messages_all =:noMessagesAll
+              ,no_messages_insert =:noMessagesInsert
+              ,no_messages_exists =:noMessagesExists
+              ,no_messages_overwrite =:noMessagesOverwrite
+              ,no_messages_error =:noMessagesError
+              ,no_recipient =:noRecipient
+              ,no_header =:noHeader
+              ,no_attachment =:noAttachment
+              ,injection_status =:injectionStatus
+            where injectionid=:injectionid
+        ]]></value>
+        </property>
+        <property name="item" value="#{injectionHolder.injection}"/>
+        <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+    </bean>
+
+
+    <!-- *******************************************
+                    Readers
+         *******************************************  -->
+
+    <bean id="multiResourceReader"
+          class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <!--<property name="resources" value="file://C:/Users/ramezani/Desktop/enron_mail_20150507/maildir/arnold-j/*" />-->
+        <!--<property name="resources" value="file://C:/Users/ramezani/Desktop/enron_mail_20150507/maildir/**" />-->
+        <!--<property name="resources" value="file://C:/Users/ramezani/Desktop/enron_mail_20150507/maildir/allen-p/**" />-->
+        <property name="resources" value="#{jobParameters['sourcepath']}" />
+        <property name="delegate" ref="emailFileItemReader" />
+    </bean>
+    <bean id="emailFileItemReader" class="bip.sepehr.reader.EmailFileItemReader" scope="step"/>
+
+    <!-- *******************************************
+                    Processors
+         *******************************************  -->
+
+    <bean id="emailMessageFullProcessor" class="bip.sepehr.processor.EmailMessageFullProcessor">
+        <!--<property name="stageMessageProcessor" ref="stageMessageProcessor"/>-->
+        <property name="messageProcessor" ref="messageProcessor"/>
+    </bean>
+
+    <bean id="stageMessageProcessor" class="bip.sepehr.processor.StageMessageProcessor"/>
+
+    <bean id="messageProcessor" class="bip.sepehr.processor.MessageProcessor" scope="step">
+        <property name="injectionHolder" ref="injectionHolder"/>
+    </bean>
+
+
+
+    <!-- *******************************************
+                Writers
+     *******************************************  -->
+
+    <bean id="emailMessageFullItemWriter" class="bip.sepehr.writer.EmailMessageFullItemWriter" scope="step">
+        <!--<property name="stageMessageItemWriter" ref="stageMessageItemWriter"/>-->
+        <property name="personItemWriter" ref="personItemWriter"/>
+        <property name="contactItemWriter" ref="contactItemWriter"/>
+        <property name="messageItemWriter" ref="messageItemWriter"/>
+        <property name="recipientItemWriter" ref="recipientItemWriter"/>
+        <property name="headerItemWriter" ref="headerItemWriter"/>
+        <property name="attachmentItemWriter" ref="attachmentItemWriter"/>
+
+        <property name="injectionHolder" ref="injectionHolder"/>
+
+    </bean>
+
+    <bean id="stageMessageItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into stage_message (id,md5,sender,recipient,message_id,msgdate,subject,cc,bcc,body,folder)
+    			values (seq_stage_message.nextval,:md5,:sender,:recipient,:messageId,:date,:subject,:cc,:bcc,:body,:folder)
+                ]]></value>
+        </property>
+        <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+    </bean>
+
+    <bean id="personItemWriter" class="bip.sepehr.writer.CheckExistsReturnKeyItemWriter">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql"><value><![CDATA[
+            	insert into person (personid,nationalcode)
+    			values (null,:nationalcode)
+                ]]></value>
+        </property>
+        <property name="idColumn" value="personid"/>
+        <property name="sqlCheckExists"><value><![CDATA[
+            	select personid,nationalcode from person where nationalcode in(:nationalcodes)
+                ]]></value>
+        </property>
+        <property name="sqlCheckExistsINparameterName" value="nationalcodes"/>
+        <property name="searchColumn" value="nationalcode"/>
+    </bean>
+
+    <bean id="contactItemWriter" class="bip.sepehr.writer.CheckExistsReturnKeyItemWriter">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into contact (contactid,email,name,personid)
+    			values (seq_contact.nextval,replace(:email,'\',''),:name,:personid)
+                ]]></value>
+        </property>
+        <property name="idColumn" value="contactid"/>
+        <property name="sqlCheckExists"><value><![CDATA[
+            	select contactid,email from contact where email in(:emails)
+                ]]></value>
+        </property>
+        <property name="sqlCheckExistsINparameterName" value="emails"/>
+        <property name="searchColumn" value="email"/>
+        <property name="listener" ref="contactItemWriterListener"/>
+    </bean>
+
+    <bean id="messageItemWriter" class="bip.sepehr.writer.CheckExistsReturnKeyItemWriter" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into message (messageid,smtpid,messagedt,messagetz,senderid,subject,injectionid,body,folder)
+    			values (seq_message.nextval,:smtpid,:messagedt,:messagetz,:senderid,:subject,:injectionid,:body,:folder)
+                ]]></value>
+        </property>
+        <property name="idColumn" value="messageid"/>
+        <property name="sqlCheckExists"><value><![CDATA[
+            	select messageid,smtpid from message where smtpid in(:smtpids)
+                ]]></value>
+        </property>
+        <property name="sqlCheckExistsINparameterName" value="smtpids"/>
+        <property name="searchColumn" value="smtpid"/>
+        <property name="updateItemWriter" ref="overwriteMessageItemWriter"/>
+        <property name="entityErrorHandler" ref="injectionErrorHandler"/>
+        <property name="listener" ref="messageItemWriterListener"/>
+    </bean>
+
+    <bean id="overwriteMessageItemWriter" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+                    <property name="dataSource" ref="dataSource"/>
+                    <property name="sql"><value><![CDATA[delete from attachment where messageid=:messageid]]></value></property>
+                    <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+                    <property name="assertUpdates" value="false"/>
+                </bean>
+                <bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+                    <property name="dataSource" ref="dataSource"/>
+                    <property name="sql"><value><![CDATA[delete from header where messageid=:messageid]]></value></property>
+                    <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+                    <property name="assertUpdates" value="false"/>
+                </bean>
+                <bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+                    <property name="dataSource" ref="dataSource"/>
+                    <property name="sql"><value><![CDATA[delete from recipient where messageid=:messageid]]></value></property>
+                    <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+                    <property name="assertUpdates" value="false"/>
+                </bean>
+                <bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+                    <property name="dataSource" ref="dataSource"/>
+                    <property name="sql"><value><![CDATA[delete from message where messageid=:messageid]]></value></property>
+                    <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+                    <property name="assertUpdates" value="false"/>
+                </bean>
+                <bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+                    <property name="dataSource" ref="dataSource"/>
+                    <property name="sql"><value><![CDATA[
+                        insert into message (messageid,smtpid,messagedt,messagetz,senderid,subject,injectionid,body,folder)
+    			        values (:messageid,:smtpid,:messagedt,:messagetz,:senderid,:subject,:injectionid,:body,:folder)
+                    ]]></value></property>
+                    <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="recipientItemWriter" class="bip.sepehr.writer.CheckExistsReturnKeyItemWriter">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into recipient (recipientid,messageid,reciptype,reciporder,contactid,injection_from,injection_to,recipient_key)
+    			values (seq_recipient.nextval,:messageid,:reciptype,:reciporder,:contactid,:injectionFrom,:injectionTo,(:messageid||'-'||:reciptype||'-'||:reciporder||'-'||:contactid))
+                ]]></value>
+        </property>
+        <property name="idColumn" value="recipientid"/>
+        <property name="sqlCheckExists"><value><![CDATA[
+                select  recipientid,recipient_key recipientKey from recipient r
+                where recipient_key in (:recipientKeys)
+                ]]></value>
+        </property>
+        <property name="sqlCheckExistsINparameterName" value="recipientKeys"/>
+        <property name="searchColumn" value="recipientKey"/>
+        <!--<property name="removeExists" value="true"/>-->
+        <property name="sqlUpdate"><value><![CDATA[
+            update recipient set injection_from=(injection_from or :injectionFrom),injection_to=(injection_to or :injectionTo) where recipientid=:recipientid;
+                ]]></value>
+        </property>
+        <property name="entityErrorHandler" ref="injectionErrorHandler"/>
+    </bean>
+
+    <bean id="headerItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into header (headerid,messageid,headername,headervalue)
+    			values (seq_header.nextval,:messageid,:headername,:headervalue)
+                ]]></value>
+        </property>
+        <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+    </bean>
+
+    <bean id="attachmentItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	insert into attachment (id,messageid,content,contentId,contentType,contentMd5,encoding,fileName,description,disposition,contentLanguage,allHeaders,lineCount,attachmentsize)
+    			values (seq_attachment.nextval,:messageid,:content,:contentId,:contentType,:contentMd5,:encoding,:fileName,:description,:disposition,:contentLanguage,:allHeaders,:lineCount,:size)
+                ]]></value>
+        </property>
+        <property name="itemSqlParameterSourceProvider" ref="beanPropertyItemSqlParameterSourceProvider"/>
+    </bean>
+
+
+    <!-- ERROR HANDLER -->
+    <bean id="injectionErrorHandler" class="bip.sepehr.writer.InjectionErrorHandlerImpl" scope="step" >
+        <property name="dataSource" ref="dataSource"/>
+        <property name="injectionHolder" ref="injectionHolder"/>
+        <property name="logErrorSql"><value><![CDATA[
+                insert into injection_error (id,smtpid,injectionid,username,contactid,messagepath,errordate,error)
+                values(seq_injection_error.nextval,:smtpid,:injectionid,:username,:contactid,:messagepath,:date,:injection_error)
+                ]]></value>
+        </property>
+        <property name="retryErrorSql"><value><![CDATA[
+        update injection_error set
+             retry_username=:retry_username
+            ,retry_date=:retry_date
+            ,retry_count=nvl(retry_count,0)+1
+            ,retry_error=:retry_error
+             where smtpid=:smtpid
+                ]]></value>
+        </property>
+        <property name="existsInjectionErrorSql"><value><![CDATA[
+            select count(*) from injection_error where smtpid=?
+                ]]></value>
+        </property>
+
+    </bean>
+
+    <bean id="resolve_injection_error" class="bip.sepehr.tasklet.ExecuteSqlTasklet" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql"><value><![CDATA[
+            	update injection_error set
+            	retry_username='#{jobParameters['username']}'
+            	,retry_date=now()
+            	,retry_count=NULLIF(retry_count,0)+1
+            	,resolved=true
+            	where smtpid='#{jobExecutionContext['smtpid']}'
+                ]]></value>
+        </property>
+    </bean>
+
+    <!-- Listeners -->
+    <bean id="objectWriteSkipListener" class="bip.sepehr.listener.ObjectWriteSkipListener" scope="step">
+        <property name="entityErrorHandler" ref="injectionErrorHandler"/>
+    </bean>
+    <bean id="contactItemWriterListener" class="bip.sepehr.listener.ContactItemWriterListener" scope="step">
+        <property name="injectionHolder" ref="injectionHolder"/>
+    </bean>
+    <bean id="messageItemWriterListener" class="bip.sepehr.listener.MessageItemWriterListener" scope="step">
+        <property name="injectionHolder" ref="injectionHolder"/>
+    </bean>
+
+
+
+</beans>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="springHikariCP" />
+        <!--<property name="connectionTestQuery" value="SELECT 1 from dual" />-->
+        <property name="dataSourceClassName" value="oracle.jdbc.pool.OracleDataSource" />
+        <!--<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />-->
+        <property name="maximumPoolSize" value="5" />
+        <property name="connectionTimeout" value="30000" />
+        <property name="maxLifetime" value="180000" />
+        <property name="autoCommit" value="true" />
+        <property name="dataSourceProperties" ref="dataSourceProperties" />
+    </bean>
+    <bean id="dataSourceProperties" class="bip.util.DataSourceProperties">
+        <property name="defaults">
+            <props>
+                <prop key="url">jdbc:oracle:thin:@192.168.88.2:1521:orcl</prop>
+                <prop key="user">saba</prop>
+                <prop key="password">saba</prop>
+            </props>
+        </property>
+        <property name="connectionProperties">
+            <props>
+                <prop key="oracle.jdbc.ReadTimeout">30000</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- HikariCP configuration -->
+    <bean id="sabaDBDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig" />
+    </bean>
+
+
+</beans>

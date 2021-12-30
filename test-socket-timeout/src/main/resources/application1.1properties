@@ -1,0 +1,12 @@
+#Properties for sabaDB
+#Thu Aug 02 14:42:55 IRDT 2018
+sabaDB.driverClassName=oracle.jdbc.driver.OracleDriver
+sabaDB.username=saba
+sabaDB.dialect=org.hibernate.dialect.OracleDialect
+sabaDB.schemaFilter=SABA
+sabaDB.connectionUrl=jdbc\:oracle\:thin\:@192.168.88.2\:1521\:orcl
+sabaDB.password=saba
+sabaDB.tableFilter=.*
+sabaDB.reverseNamingStrategy=
+sabaDB.dataSourceClassName=oracle.jdbc.pool.OracleDataSource
+

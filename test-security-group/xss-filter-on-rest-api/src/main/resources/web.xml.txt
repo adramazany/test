@@ -1,0 +1,14 @@
+<servlet>
+    <servlet-name>WebService</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+        <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+        <param-value>com.domain.security.filter.XSSFilter;</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+<servlet-name>WebServices</servlet-name>
+<url-pattern>/api/*</url-pattern>
+</servlet-mapping>
+

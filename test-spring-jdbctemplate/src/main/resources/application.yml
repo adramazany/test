@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    data-source-class-name: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:oracle:thin:@localhost:1521:orcl2
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: test
+    password: test
+    maximum-pool-size: 20
+

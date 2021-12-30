@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="test-web-xframe-options:war">
+    <output-path>$PROJECT_DIR$/test-security-group/test-web-xframe-options/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>test-web-xframe-options</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="test-web-xframe-options-1.0.war">
+      <element id="artifact" artifact-name="test-web-xframe-options:war exploded" />
+    </root>
+  </artifact>
+</component>

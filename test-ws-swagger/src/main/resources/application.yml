@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: test-WS-Server
+  main:
+    web-environment: true
+  mvc:
+    locale: en_US
+  #profiles:
+    #active: no-cache,db2
+
+server:
+  port: ${SERVER_PORT:8081}
+
+  #ssl:
+    #key-alias: sam_configmgmt_all
+    #key-password: changeit
+    #key-store: classpath:sam-configmgmt-all.jks
+    #key-store-provider: SUN
+    #key-store-type: JKS
+
+
+logging:
+  level:
+    org.springframework.web: debug
+#    org.springframework.boot: debug
+    org.springframework.http: debug
+    com.sadad.sw.sam.configmgmt: info

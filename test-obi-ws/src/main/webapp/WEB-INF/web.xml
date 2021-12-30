@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+   <filter>
+      <filter-name>LoadBalancerHTTPFilter</filter-name>
+      <filter-class>com.siebel.analytics.web.integration.LoadBalancerHTTPFilter</filter-class>
+      <init-param>
+         <param-name>oracle.bi.presentation.loadbalance.ServerKeySources</param-name>
+         <param-value>GET,POST,COOKIE,SESSION</param-value>
+      </init-param>
+   </filter>
+
+   <filter>
+      <filter-name>FirewallFilter</filter-name>
+      <filter-class>com.siebel.analytics.web.integration.FirewallFilter</filter-class>
+      <!--
+	    Uncomment AllowedRequests param below to allow only SOAP requests and prohibit UI ones
+	    Uncomment ProhibitedRequests param below  to prohibit SOAP requests and allow UI  ones
+	   -->
+      <init-param>
+         <param-name>oracle.bi.presentation.AllowedRequests</param-name>
+         <param-value>SOAP,CATALOG_API,DOWNLOADREPORT</param-value>
+      </init-param>
+      <!--
+      <init-param>
+         <param-name>oracle.bi.presentation.ProhibitedRequests</param-name>
+         <param-value>SOAP</param-value>
+      </init-param>
+      -->
+   </filter>
+
+   <filter-mapping>
+      <filter-name>FirewallFilter</filter-name>
+      <servlet-name>SAWBridge</servlet-name>
+   </filter-mapping>
+
+   <filter-mapping>
+      <filter-name>LoadBalancerHTTPFilter</filter-name>
+      <servlet-name>SAWBridge</servlet-name>
+   </filter-mapping>
+
+   <!--
+   <filter-mapping>
+      <filter-name>AddStaticHeadersFilter</filter-name>
+      <url-pattern>/res/*</url-pattern>
+   </filter-mapping>
+   -->
+
+   <servlet>
+      <servlet-name>SAWBridge</servlet-name>
+      <servlet-class>com.siebel.analytics.web.SAWBridge</servlet-class>
+      <init-param>
+         <param-name>oracle.bi.presentation.sawserver.Host</param-name>
+         <param-value>192.168.88.2</param-value>
+      </init-param>
+      <init-param>
+         <param-name>oracle.bi.presentation.sawserver.Port</param-name>
+         <param-value>9710</param-value>
+      </init-param>
+      <init-param>
+         <param-name>oracle.bi.presentation.biapplication</param-name>
+         <param-value>coreapplication</param-value>
+      </init-param>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>SAWBridge</servlet-name>
+      <url-pattern>/saw.dll/*</url-pattern>
+   </servlet-mapping>
+
+   <mime-mapping>
+      <extension>xsd</extension>
+      <mime-type>text/xml</mime-type>
+   </mime-mapping>
+
+   <mime-mapping>
+      <extension>xml</extension>
+      <mime-type>text/xml</mime-type>
+   </mime-mapping>
+
+   <mime-mapping>
+      <extension>js</extension>
+      <mime-type>text/javascript</mime-type>
+   </mime-mapping>
+
+   <mime-mapping>
+      <extension>css</extension>
+      <mime-type>text/css</mime-type>
+   </mime-mapping>
+
+   <mime-mapping>
+      <extension>png</extension>
+      <mime-type>image/png</mime-type>
+   </mime-mapping>
+
+   <mime-mapping>
+      <extension>swf</extension>
+      <mime-type>application/x-shockwave-flash</mime-type>
+   </mime-mapping>
+
+</web-app>

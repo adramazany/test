@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>bip.test</groupId>
+    <artifactId>test-main</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+
+    <modules>
+        <module>../test-parent</module>
+        <module>test-elasticsearch</module>
+        <module>test-orientdb</module>
+        <module>test-bigsql</module>
+        <module>test-wavemaker-project</module>
+        <module>test-activiti</module>
+        <module>test-spellcheck</module>
+        <module>test-geoip</module>
+        <module>test-hibernate-data-version</module>
+        <module>test-freemarker</module>
+        <module>test-spring-jdbctemplate</module>
+        <module>test-socket-timeout</module>
+        <module>test-jasperreports</module>
+        <module>test-hash</module>
+        <module>test-compress</module>
+        <module>test-file-attributes</module>
+        <module>test-tika</module>
+        <module>test-opencv</module>
+        <module>test-javafx-first</module>
+        <module>test-opencv2</module>
+        <module>test-jdk8-problem</module>
+        <module>test-openimaj</module>
+        <module>test-jasperreports-wavemaker</module>
+        <module>test-ws-dynamic-path</module>
+        <module>test-obi-ws</module>
+        <module>test-web</module>
+        <module>test-text2image</module>
+        <module>test-ws-swagger</module>
+        <module>test-spring-cloud</module>
+        <module>test-spring-cloud</module>
+        <module>test-security-group</module>
+        <!--<module>test-python-group</module>-->
+        <module>test-nashorn-database</module>
+        <module>test-rest-template-spring3</module>
+        <module>test-springboot-kafka</module>
+    </modules>
+
+
+</project>

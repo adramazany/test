@@ -1,0 +1,17 @@
+# Project exclude paths
+/out/
+/test-compress/out/
+/test-compress/target/
+/test-elasticsearch/target/
+/test-freemarker/target/
+/test-hibernate-data-version/target/
+/test-jasperreports/target/
+/test-jasperreports-wavemaker/target/
+/test-orientdb/target/
+/test-security-group/test-web-xframe-options/target/
+/test-socket-timeout/target/
+/test-spellcheck/target/
+/test-spring-jdbctemplate/target/
+/test-web/target/
+/test-ws-dynamic-path/target/
+/test-ws-swagger/target/

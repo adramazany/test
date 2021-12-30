@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="test-obi-ws:war">
+    <output-path>$PROJECT_DIR$/test-obi-ws/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>test-obi-ws</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="test-obi-ws-1.0.war">
+      <element id="artifact" artifact-name="test-obi-ws:war exploded" />
+    </root>
+  </artifact>
+</component>

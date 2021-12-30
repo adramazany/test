@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/test-elasticsearch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-obi-ws" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-openimaj" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-openimaj/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-openimaj/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-security-csrf" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-security-csrf/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-security-csrf2" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-security-csrf2/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-spring-security" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/test-spring-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-security-group/xss-filter-on-rest-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-admin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-admin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-customer-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-customer-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-eureka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-eureka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-product-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-product-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-zuul" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-spring-cloud/test-cloud-zuul/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-https" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-https/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-jpa-subselect" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-jpa-subselect/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-kafka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-mvc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-springboot-mvc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-ws-dynamic-path" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-ws-dynamic-path/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-ws-swagger" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test-ws-swagger/src/main/java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

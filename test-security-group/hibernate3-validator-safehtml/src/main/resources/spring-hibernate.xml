@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <context:component-scan base-package="bip.test.hibenate3"/>
+    <tx:annotation-driven/>
+
+<!--
+    <bean class="com.sabadb.SabaDB" scope="singleton" lazy-init="true" id="sabaDB">
+        <property name="dataServiceManager">
+            <ref bean="sabaDBDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="sabaDBTaskMgr"/>
+        </property>
+    </bean>
+    <bean class="com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:sabaDB.properties</value>
+            </list>
+        </property>
+    </bean>
+-->
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" lazy-init="true" id="dataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:C:\Users\ramezani\git\test\test-main\hibernate3-validator-safehtml\src\main\resources\hr.db;MODE=ORACLE"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+    <bean class="org.springframework.orm.hibernate3.HibernateTransactionManager" lazy-init="true" id="transactionManager">
+        <property name="defaultTimeout" value="180"/>
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+    <bean class="org.springframework.orm.hibernate3.HibernateTemplate" lazy-init="true" id="hibernateTemplate">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+<!--
+    <bean class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean" lazy-init="true" id="sabaDBSessionFactory">
+        <property name="name" value="sabaDB"/>
+        <property name="dataSource" ref="sabaDBDataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${sabaDB.dialect}</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <prop key="org.hibernate.flushMode">20</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>com/sabadb/data/AppStausField.hbm.xml</value>
+                <value>com/sabadb/data/Approvals.hbm.xml</value>
+                <value>com/sabadb/data/Attachments.hbm.xml</value>
+                <value>com/sabadb/data/AttachmentsNoBlob.hbm.xml</value>
+                <value>com/sabadb/data/Audiences.hbm.xml</value>
+                <value>com/sabadb/data/BookmarkApprovalNoRel.hbm.xml</value>
+                <value>com/sabadb/data/BookmarkApprovalRel.hbm.xml</value>
+                <value>com/sabadb/data/BtAudiences.hbm.xml</value>
+                <value>com/sabadb/data/BtAuthorities.hbm.xml</value>
+                <value>com/sabadb/data/BtClassification.hbm.xml</value>
+                <value>com/sabadb/data/BtCondition.hbm.xml</value>
+                <value>com/sabadb/data/BtHeadquartersOffice.hbm.xml</value>
+                <value>com/sabadb/data/BtHeadquartersOffice.ql.xml</value>
+                <value>com/sabadb/data/BtImmediate.hbm.xml</value>
+                <value>com/sabadb/data/BtReviewComments.hbm.xml</value>
+                <value>com/sabadb/data/BtRoleUsers.hbm.xml</value>
+                <value>com/sabadb/data/BtTopic.hbm.xml</value>
+                <value>com/sabadb/data/BtTreeStructure.hbm.xml</value>
+                <value>com/sabadb/data/BtType.hbm.xml</value>
+                <value>com/sabadb/data/BtWordsTree.hbm.xml</value>
+                <value>com/sabadb/data/Effect.hbm.xml</value>
+                <value>com/sabadb/data/Notify.hbm.xml</value>
+                <value>com/sabadb/data/NotifyNoRel.hbm.xml</value>
+                <value>com/sabadb/data/Operationlog.hbm.xml</value>
+                <value>com/sabadb/data/Reference.hbm.xml</value>
+                <value>com/sabadb/data/Section.hbm.xml</value>
+                <value>com/sabadb/data/Structur.hbm.xml</value>
+                <value>com/sabadb/data/StructureElement.hbm.xml</value>
+                <value>com/sabadb/data/Topics.hbm.xml</value>
+                <value>com/sabadb/data/TopicsNoRel.hbm.xml</value>
+                <value>com/sabadb/data/User_comments.hbm.xml</value>
+                <value>com/sabadb/data/User_commentsNoRel.hbm.xml</value>
+                <value>com/sabadb/data/User_note.hbm.xml</value>
+                <value>com/sabadb/data/Users.hbm.xml</value>
+                <value>com/sabadb/data/Users_role.hbm.xml</value>
+                <value>com/sabadb/data/VwAddChildSectionRequirement.hbm.xml</value>
+                <value>com/sabadb/data/VwAddRootSectionRequirement.hbm.xml</value>
+                <value>com/sabadb/data/VwApprovalHeadqarter.hbm.xml</value>
+                <value>com/sabadb/data/VwApprovalSectionTopics.hbm.xml</value>
+                <value>com/sabadb/data/VwMasterEffect.hbm.xml</value>
+                <value>com/sabadb/data/VwReferenceApproval_notUse.hbm.xml</value>
+                <value>com/sabadb/data/VwSlaveEffect.hbm.xml</value>
+                <value>com/sabadb/data/VwSourcsReference.hbm.xml</value>
+                <value>com/sabadb/data/VwStatisticsNotices.hbm.xml</value>
+                <value>com/sabadb/data/app-queries.ql.xml</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="com.wavemaker.runtime.data.spring.SpringDataServiceManager" lazy-init="true" id="sabaDBDataService">
+        <constructor-arg>
+            <value>sabaDB</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sabaDBHibernateTemplate"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sabaDBTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sabaDBTaskMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="useIndividualCRUDOperations" value="false"/>
+                <entry key="refreshEntities" value=""/>
+            </map>
+        </constructor-arg>
+    </bean>
+    <bean class="com.wavemaker.runtime.data.DefaultTaskManager" lazy-init="true" id="sabaDBTaskMgr"/>
+    <bean class="com.wavemaker.runtime.service.events.EventWire" lazy-init="false">
+        <property name="serviceWire" ref="sabaDBServiceWire"/>
+        <property name="eventListener">
+            <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
+        </property>
+    </bean>
+    <bean class="com.wavemaker.runtime.service.reflect.ReflectServiceWire" scope="singleton" lazy-init="false" id="sabaDBServiceWire">
+        <property name="serviceId" value="sabaDB"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+-->
+
+
+
+
+
+
+
+
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="bip.test.hibenate3" />
+        <property name="hibernateProperties">
+            <props>
+<!--                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+</beans>

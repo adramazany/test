@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>test-parent</artifactId>
+        <groupId>bip.test</groupId>
+        <version>1.0</version>
+        <relativePath>../test-parent/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>test-orientdb</artifactId>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <!--
+https://orientdb.com/docs/2.0/orientdb.wiki/Tutorial-Java.html
+    -->
+
+    <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-core -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-core</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-graphdb -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-graphdb</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-client -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-client</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orient-commons -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orient-commons</artifactId>
+            <version>1.7.10</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-object -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-object</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-test-commons -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-test-commons</artifactId>
+            <version>3.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-tools -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-tools</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-enterprise -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-enterprise</artifactId>
+            <version>2.1.25</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-lucene -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-lucene</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-studio -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-studio</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/spring-data-orientdb-commons -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>spring-data-orientdb-commons</artifactId>
+            <version>0.14</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-etl -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-etl</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/spring-data-orientdb-object -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>spring-data-orientdb-object</artifactId>
+            <version>0.14</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-jdbc -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-jdbc</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-community -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-community</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+
+        <!-- *********************************
+        Apache TinkerPop :: Graph Computing Framework
+             *********************************  -->
+        <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-gremlin -->
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-gremlin</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tinkerpop/gremlin-core -->
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>gremlin-core</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tinkerpop/tinkergraph-gremlin -->
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>tinkergraph-gremlin</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tinkerpop/gremlin-driver -->
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>gremlin-driver</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tinkerpop/tinkerpop -->
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>tinkerpop</artifactId>
+            <version>3.3.3</version>
+            <type>pom</type>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

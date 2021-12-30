@@ -1,0 +1,49 @@
+package bip.test.openimaj.matching;
+
+import org.openimaj.feature.local.list.LocalFeatureList;
+import org.openimaj.feature.local.matcher.BasicMatcher;
+import org.openimaj.feature.local.matcher.FastBasicKeypointMatcher;
+import org.openimaj.feature.local.matcher.LocalFeatureMatcher;
+import org.openimaj.feature.local.matcher.MatchingUtilities;
+import org.openimaj.feature.local.matcher.consistent.ConsistentLocalFeatureMatcher2d;
+import org.openimaj.image.DisplayUtilities;
+import org.openimaj.image.ImageUtilities;
+import org.openimaj.image.MBFImage;
+import org.openimaj.image.colour.RGBColour;
+import org.openimaj.image.feature.local.engine.DoGSIFTEngine;
+import org.openimaj.image.feature.local.keypoints.Keypoint;
+import org.openimaj.math.geometry.transforms.estimation.RobustAffineTransformEstimator;
+import org.openimaj.math.model.fit.RANSAC;
+
+import java.io.File;
+import java.io.IOException;
+
+
+/**
+ * Created by ramezani on 11/5/2019.
+ */
+public class TestBasicMatcher {
+    static String basePath = "C:\\Users\\ramezani\\git\\test\\test-main\\test-openimaj\\src\\main\\resources\\att_faces\\";
+
+    public static void main(String[] args)throws Exception {
+        MBFImage query = ImageUtilities.readMBF(new File(basePath+"s1/1.pgm"));
+        MBFImage target = ImageUtilities.readMBF(new File(basePath+"s3/10.pgm"));
+
+        DoGSIFTEngine engine = new DoGSIFTEngine();
+        LocalFeatureList<Keypoint> queryKeypoints = engine.findFeatures(query.flatten());
+        System.out.println("queryKeypoints = " + queryKeypoints.size()+ " - " + queryKeypoints);
+        LocalFeatureList<Keypoint> targetKeypoints = engine.findFeatures(target.flatten());
+        System.out.println("targetKeypoints = " + targetKeypoints.size()+ " - " + targetKeypoints);
+
+        LocalFeatureMatcher<Keypoint> matcher = new BasicMatcher<Keypoint>(80);
+        matcher.setModelFeatures(queryKeypoints);
+        boolean findMatches=matcher.findMatches(targetKeypoints);
+        System.out.println("findMatches = " + findMatches);
+
+
+        MBFImage basicMatches = MatchingUtilities.drawMatches(query, target, matcher.getMatches(), RGBColour.RED);
+        DisplayUtilities.display(basicMatches);
+    }
+
+
+}
